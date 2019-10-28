@@ -1,10 +1,9 @@
 #!/bin/bash
-
 # Install main dependencies
 sudo apt-get update
 sudo apt-get install -y \
      git \
-     python3.7 \
+     python3 \
      postgresql \
      vim \
      virtualenv \
@@ -28,7 +27,7 @@ sudo mv wkhtmltox/share/man/man1 /usr/local/share/man/
 # install Build dependencies
 sudo apt-get install -y \
     gcc \
-    python3.7-dev \
+    python3-dev \
     libxml2-dev \
     libxslt1-dev \
     libevent-dev \
@@ -40,19 +39,16 @@ sudo apt-get install -y \
     libjpeg-dev
 
 # Configure Postgres
-sudo -u postgres createuser --createdb $(whoami)
-createdb $(whoami)
-
-# clone odoo 13 repo
-mkdir ~/odoo-dev
-cd ~/odoo-dev
-git clone -b 13.0 --single-branch --depth=5 https://github.com/odoo/odoo.git 
-cd odoo
+sudo -u postgres createuser --createdb vagrant 
+sudo -u vagrant createdb 
 
 # Activate virtualenv and install odoo python dependencies
-virtualenv -p python3 ~/odoo-13.0
-source ~/odoo-13.0/bin/activate
+virtualenv -p python3 ~vagrant/odoo-13.0
+source ~vagrant/odoo-13.0/bin/activate
+wget https://raw.githubusercontent.com/odoo/odoo/13.0/requirements.txt
 pip3 install -r requirements.txt
+sudo chown -R vagrant:vagrant ~vagrant
 
-
-
+#Create your first odoo instance
+cd /vagrant/odoo
+sudo -u vagrant createdb odoo-dev 
